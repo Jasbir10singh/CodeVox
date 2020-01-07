@@ -1,0 +1,39 @@
+from pydriller import RepositoryMining
+import sys
+import csv
+import datetime 
+
+#Commit hash, Author name, dATE,day, changeType, complexity, added, diff
+filename="Demo_ppt5.csv"
+fields=['hash','name','date','day','changeType','cmplx','added','DIF']
+row=[]
+with open(filename, 'w',newline='') as csvfile:
+    csvwriter=csv.DictWriter(csvfile,fieldnames=fields)
+    csvwriter.writeheader()
+    
+for commit in RepositoryMining('https://gerrit.automotivelinux.org/gerrit/AGL/AGL-repo').traverse_commits(): 
+    for m in commit.modifications:
+        hash_t=commit.hash
+        name_t=commit.author.name
+        Tdate=commit.author_date
+        ctype=m.change_type.name
+        cmplxty=m.complexity
+        tadd=m.added
+        dif=m.diff
+        #print(type(Tdate))
+        temp=str(Tdate)
+        #to calculate result on basis of weekdays not weekend i.e not on sat and sun.
+        temp1=temp[:-3]
+        temp2=temp[-2:]
+        temp3=temp1+temp2
+        date_obj=datetime.datetime.strptime(temp3, '%Y-%m-%d %H:%M:%S%z')
+        day_t= date_obj.strftime('%A')
+        day_no= date_obj.weekday()
+        if (day_no==0 or 1 or 2 or 3 or 4 ):
+            rows=[{'hash': hash_t,'name': name_t,'date': date_t,'day': day_t,'changeType': ctype,'cmplx': cmplxty,'added':tadd,'DIF':dif}]
+
+            with open(filename, 'a',encoding="utf-8",newline='') as csvfile:
+                #csvwriter=csv.writer(csvfile)
+                csvwriter=csv.DictWriter(csvfile,fieldnames=fields)
+                #writing the data rows
+                csvwriter.writerows(rows) 
