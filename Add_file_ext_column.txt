@@ -1,0 +1,31 @@
+FileHistory=pd.read_csv("FileHistory.csv")
+FileHistory.columns=['Branch','FilePath','ChangesetId','CreationDate','OwnerDisplayName','Comments']
+import re
+import pandas as pd
+def reverse_func(x): #reverse func to reverse the row
+    return x[::-1]
+rev_patterns = re.compile('\w+\.') #pattern in reverse manner
+data=[] #list to store the extensions
+count=0
+
+for rows in FileHistory['FilePath']:
+    temp=rows.split('/')
+    #print(data)
+    row=temp.pop() 
+    print(row)
+    myfile = reverse_func(row)
+    print(myfile)
+    pattern_check=rev_patterns.search(myfile)
+    print(pattern_check)#search all patterns in row, if not found then return None
+    if(pattern_check==None): #for files with no extension
+        data.append("None")
+        count=count+1
+    else:
+        all_patterns=rev_patterns.findall(myfile) #finds list of all pattern in row
+        pattern=reverse_func(all_patterns[0]) #find the req pattern i.e extension of file
+        data.append(pattern)  #store extension in list
+print(count) 
+
+FileHistory['File_Extension']=pd.Series(data) #adding a new column
+FileHistory.info()
+FileHistory.to_csv('New_FileHistory_with_extension.csv',header=True,index=False)
