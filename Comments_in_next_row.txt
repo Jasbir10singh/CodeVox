@@ -1,0 +1,47 @@
+# Data cleaning of New_BugChangesetFile (with some part of comments are presnet in next rows)  
+import sys
+# Data cleaning of New_BugChangesetFile (with some part of comments are presnet in next rows)  
+import csv
+import pandas as pd
+count=0
+ls=[]
+ls1=[]
+df=pd.read_csv('New_BugChangesetFile.csv',sep=',',engine='python')
+df.to_csv('Temp1.csv',index=False)
+filename1="Temp1.csv"
+filename2="Bug_final.csv"
+with open(filename1,'r',newline='',encoding="utf8") as csvfile:
+    csvreader=csv.reader(csvfile)
+    fields=next(csvfile)
+    li = list(fields.split(","))
+    print(li)
+    print(type(li))
+
+with open(filename2, 'a',newline='',encoding="utf8") as csvfile1:
+    csvwriter=csv.writer(csvfile1)
+    csvwriter.writerow(li)
+with open(filename1,'r',newline='',encoding="utf8") as csvfile:
+    csvreader=csv.reader(csvfile)
+    fields=next(csvreader)
+    temp1=next(csvreader)
+    ls=temp1
+    #print(ls)
+    for rows in csvreader:
+        #print(rows)
+        if (len(rows[1])==8):
+            with open(filename2, 'a',newline='',encoding="utf8") as csvfile1:
+                csvwriter=csv.writer(csvfile1)
+                csvwriter.writerow(ls)
+            x=rows
+            #print(type(x))
+            ls=rows
+        else:
+            temp=rows[1]
+            temp2=ls[8]+temp
+            ls.pop()
+            ls.append(temp2)
+    with open(filename2, 'a',newline='',encoding="utf8") as csvfile1:
+                csvwriter=csv.writer(csvfile1)
+                csvwriter.writerow(ls)
+            
+        
