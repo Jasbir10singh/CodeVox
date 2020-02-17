@@ -1,0 +1,27 @@
+step 1- Import libraries
+#code to read csv file into colaboratory:
+
+!pip install -U -q PyDrive
+from pydrive.auth import GoogleAuth
+from pydrive.drive import GoogleDrive
+from google.colab import auth
+from oauth2client.client import GoogleCredentials
+
+step 2- Authenticate your account 
+auth.authenticate_user()
+gauth = GoogleAuth()
+gauth.credentials = GoogleCredentials.get_application_default()
+drive = GoogleDrive(gauth)
+# it will give you a link click on that and allow yur google account, copy the passcode and paste in the google colab
+# and hit enter
+
+step 3- Get the file
+downloaded = drive.CreateFile({'id':'15YXmrofgk_2yQHgk7QiZSgD_FTeaQsku'})
+# for ID go to the google drive where you uploaded the data right click->get sharable link-> copy the path
+# remove all the deta before the = rest is your ID.
+downloaded.GetContentFile('Data.csv')
+
+step 4- read the file
+import pandas as pd
+xyz= pd.read_csv('Data.csv')
+print(xyz.head(1))
